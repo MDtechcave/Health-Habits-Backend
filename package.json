@@ -1,0 +1,27 @@
+{
+  "name": "hb-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MDtechcave/Health-Habits-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/MDtechcave/Health-Habits-Backend/issues"
+  },
+  "homepage": "https://github.com/MDtechcave/Health-Habits-Backend#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "mysql2": "^3.17.0",
+    "nodemon": "^3.1.11"
+  }
+}
