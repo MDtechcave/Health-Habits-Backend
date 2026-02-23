@@ -1,4 +1,7 @@
 import mysql from "mysql2/promise";
+// import { config } from 'dotenv';
+
+// config()
 
 const pool = mysql.createPool({
 
@@ -9,5 +12,7 @@ const pool = mysql.createPool({
 });
 
 pool.getConnection()
-  .then(() => console.log("It' working "))
+  .then(() => console.log("It's working "))
   .catch(err => console.error("It's not working ", err));
+
+  export default pool;
