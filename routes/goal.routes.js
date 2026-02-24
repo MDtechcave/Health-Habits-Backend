@@ -1,15 +1,9 @@
 
 import express from 'express';
-import { 
-  getGoals, 
-  getMealsByGoal, 
-  getMealById 
-} from '../controllers/goalCon.js';
+import { getgoalCon } from '../controllers/goalCon.js';
 
 const router = express.Router();
 
-router.get('/', getGoals);
-router.get('/:goal/meals', getMealsByGoal);
-router.get('/meal/:id', getMealById);
+router.get('/goal', getgoalCon);
 
 export default router;

@@ -1,11 +1,11 @@
-import pool from './pool.js'
+import pool from '../pool.js'
 
-const getMealsByGoal = async () => {
+const getgoalDb = async () => {
   const [data] = await pool.query('SELECT * FROM goals;') 
   return data  
 }
 
 export{
-    getMealsByGoal
+    getgoalDb
 }
 
