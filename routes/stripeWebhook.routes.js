@@ -1,6 +1,6 @@
 import express from "express";
 import Stripe from "stripe";
-import pool from "../pool.js"; // change path if needed
+import pool from "../pool.js";
 
 const router = express.Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
 
   try {
     event = stripe.webhooks.constructEvent(
-      req.body, // raw body buffer
+      req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
@@ -22,27 +22,41 @@ router.post("/", async (req, res) => {
   try {
     if (event.type === "payment_intent.succeeded") {
       const pi = event.data.object;
-      const orderId = Number(pi.metadata?.order_id);
+      const orderIdRaw = pi?.metadata?.order_id;
+
+      // Stripe CLI triggers won't have your metadata — don't crash
+      if (!orderIdRaw) {
+        return res.json({ received: true, skipped: "Missing order_id metadata" });
+      }
+
+      const orderId = Number(orderIdRaw);
 
       await pool.query(
-        `UPDATE orders SET order_status='paid' WHERE order_id=?`,
+        "UPDATE orders SET order_status='paid' WHERE order_id=?",
         [orderId]
       );
     }
 
     if (event.type === "payment_intent.payment_failed") {
       const pi = event.data.object;
-      const orderId = Number(pi.metadata?.order_id);
+      const orderIdRaw = pi?.metadata?.order_id;
+
+      if (!orderIdRaw) {
+        return res.json({ received: true, skipped: "Missing order_id metadata" });
+      }
+
+      const orderId = Number(orderIdRaw);
 
       await pool.query(
-        `UPDATE orders SET order_status='failed' WHERE order_id=?`,
+        "UPDATE orders SET order_status='failed' WHERE order_id=?",
         [orderId]
       );
     }
 
-    res.json({ received: true });
+    return res.json({ received: true });
   } catch (err) {
-    res.status(500).send(err.message);
+    console.error("Webhook handler error:", err);
+    return res.status(500).send(err.message);
   }
 });
 
