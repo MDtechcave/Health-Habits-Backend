@@ -38,7 +38,7 @@ app.use("/api", usersRoutes);
 app.use("/api", packagesRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", subscriptionRoutes);
-app.use('/api/', goalRoutes);
+app.use('/api', goalRoutes);
 
 
 

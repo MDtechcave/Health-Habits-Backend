@@ -1,8 +1,9 @@
-import express from 'express';
-import {postusersCon} from '../controllers/usersCon.js';
+import express from 'express'
+import { postusersCon, loginUserCon } from '../controllers/usersCon.js'
 
-const router = express.Router();
+const router = express.Router()
 
-router.post('/users', postusersCon)
+router.post('/users', postusersCon)       // register
+router.post('/users/login', loginUserCon) // login
 
-export default router;
+export default router

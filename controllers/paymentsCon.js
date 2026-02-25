@@ -53,13 +53,11 @@ export const createPaymentIntent = async (req, res) => {
     }
 
     // 1) Insert order as pending
-    const [result] = await pool.query(
-      `INSERT INTO orders (sub_id, amount, order_status)
-       VALUES (?, ?, 'pending')`,
-      [sub_id, amountCents]
-    );
-
-    const orderId = result.insertId;
+const [result] = await pool.query(
+  `INSERT INTO orders (sub_id, amount, order_status, order_date)
+   VALUES (?, ?, 'pending', CURDATE())`,
+  [sub_id, amountCents]
+);    const orderId = result.insertId;
 
     // 2) Create PaymentIntent + attach order_id in metadata
     const paymentIntent = await stripe.paymentIntents.create({
