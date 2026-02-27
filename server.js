@@ -15,7 +15,7 @@ import orderRoutes from "./routes/order.routes.js";
 import subscriptionRoutes from "./routes/subscription.routes.js";
 import goalRoutes from './routes/goal.routes.js';
 import stripeWebhookRoutes from './routes/stripeWebhook.routes.js';
-import authRoutes from './routes/auth.routes.js';  //  Auth routes
+import adminRoutes from './routes/admin.routes.js'
 
 const app = express();
 
@@ -33,8 +33,6 @@ app.use(
   stripeWebhookRoutes
 );
 
-// ✅ 4. NOW register all API routes (AFTER json parser)
-app.use("/api/auth", authRoutes);           // Login route
 app.use("/api/payments", paymentRoutes);
 app.use("/api", mealsRoutes);
 app.use("/api", drinksRoutes);
@@ -43,6 +41,7 @@ app.use("/api", packagesRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", subscriptionRoutes);
 app.use('/api/', goalRoutes);
+app.use('/api/admin', adminRoutes)
 
 // Health check
 app.get("/", (req, res) => {
