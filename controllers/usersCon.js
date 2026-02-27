@@ -40,13 +40,13 @@ export const loginUserCon = async (req, res) => {
     }
 
     const user = await getUserByEmailDb(email)
-    
+
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid email or password' })
     }
 
     const match = await bcrypt.compare(password, user.password)
-    
+
     if (!match) {
       return res.status(401).json({ success: false, message: 'Invalid email or password' })
     }
@@ -57,10 +57,12 @@ export const loginUserCon = async (req, res) => {
       success: true,
       message: 'Login successful',
       user: {
-        id: safeUser.user_id,
+        id: safeUser.id,       // ✅ fixed: DB aliases user_id AS id
         name: safeUser.name,
         email: safeUser.email,
-        role: safeUser.role  // 'USER' or 'ADMIN' — comes from DB
+        role: safeUser.role,
+        status: safeUser.status,
+        address: safeUser.address
       }
     })
   } catch (err) {
