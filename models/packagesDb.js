@@ -5,6 +5,4 @@ const getpackagesDb =async () => {
     return data
 }
 
-export {
-    getpackagesDb
-}
+export {getpackagesDb}

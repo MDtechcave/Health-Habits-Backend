@@ -32,7 +32,7 @@ app.use(
 app.use("/api/payments", paymentRoutes);
 app.use("/api", mealsRoutes);
 app.use("/api", drinksRoutes);
-app.use("/api", usersRoutes);
+app.use("/api/users", usersRoutes);
 app.use("/api", packagesRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", subscriptionRoutes);
