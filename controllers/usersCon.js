@@ -8,7 +8,7 @@ import {
   deleteUserDb
 } from '../models/usersDb.js'
 
-// ==================== REGISTER ====================
+// REGISTER — customers only
 export const postusersCon = async (req, res) => {
   try {
     const { name, email, password, address } = req.body
@@ -29,90 +29,40 @@ export const postusersCon = async (req, res) => {
   }
 }
 
-// ==================== LOGIN ====================
+// LOGIN — handles both USER and ADMIN
 export const loginUserCon = async (req, res) => {
   try {
     const { email, password } = req.body
 
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' })
+      return res.status(400).json({ success: false, message: 'Email and password are required' })
     }
 
     const user = await getUserByEmailDb(email)
     
     if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password' })
+      return res.status(401).json({ success: false, message: 'Invalid email or password' })
     }
 
     const match = await bcrypt.compare(password, user.password)
     
     if (!match) {
-      return res.status(401).json({ error: 'Invalid email or password' })
+      return res.status(401).json({ success: false, message: 'Invalid email or password' })
     }
 
     const { password: _, ...safeUser } = user
-    res.json({ message: 'Login successful', user: safeUser })
-    
-  } catch (err) {
-    console.error('Login error:', err)
-    res.status(500).json({ error: 'Server error. Please try again.' })
-  }
-}
 
-// ==================== GET ALL USERS ====================
-export const getAllUsersCon = async (req, res) => {
-  try {
-    const users = await getAllUsersDb()
-    res.json(users)
+    res.json({
+      success: true,
+      message: 'Login successful',
+      user: {
+        id: safeUser.user_id,
+        name: safeUser.name,
+        email: safeUser.email,
+        role: safeUser.role  // 'USER' or 'ADMIN' — comes from DB
+      }
+    })
   } catch (err) {
-    console.error('Error fetching users:', err)
-    res.status(500).json({ error: 'Failed to fetch users' })
-  }
-}
-
-// ==================== GET USER BY ID ====================
-export const getUserByIdCon = async (req, res) => {
-  try {
-    const { id } = req.params
-    const user = await getUserByIdDb(id)
-    
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' })
-    }
-    
-    res.json(user)
-  } catch (err) {
-    console.error('Error fetching user:', err)
-    res.status(500).json({ error: 'Failed to fetch user' })
-  }
-}
-
-// ==================== UPDATE USER STATUS ====================
-export const updateUserStatusCon = async (req, res) => {
-  try {
-    const { id } = req.params
-    const { status } = req.body
-    
-    if (!status || !['active', 'inactive'].includes(status)) {
-      return res.status(400).json({ error: 'Invalid status' })
-    }
-    
-    await updateUserStatusDb(id, status)
-    res.json({ message: 'Status updated successfully' })
-  } catch (err) {
-    console.error('Error updating status:', err)
-    res.status(500).json({ error: 'Failed to update status' })
-  }
-}
-
-// ==================== DELETE USER ====================
-export const deleteUserCon = async (req, res) => {
-  try {
-    const { id } = req.params
-    await deleteUserDb(id)
-    res.json({ message: 'User deleted successfully' })
-  } catch (err) {
-    console.error('Error deleting user:', err)
-    res.status(500).json({ error: 'Failed to delete user' })
+    res.status(500).json({ success: false, message: err.message })
   }
 }

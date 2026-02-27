@@ -15,18 +15,14 @@ import orderRoutes from "./routes/order.routes.js";
 import subscriptionRoutes from "./routes/subscription.routes.js";
 import goalRoutes from './routes/goal.routes.js';
 import stripeWebhookRoutes from './routes/stripeWebhook.routes.js';
-import adminRoutes from './routes/admin.routes.js'
 
 const app = express();
 
-// ✅ 1. CORS first
 app.use(cors());
 
-// ✅ 2. JSON parser MUST come BEFORE any routes that need req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //  Add this too
 
-// ✅ 3. Stripe webhook (needs raw body - register separately)
 app.use(
   "/api/payments/webhook",
   express.raw({ type: "application/json" }),
@@ -43,7 +39,6 @@ app.use("/api", subscriptionRoutes);
 app.use('/api/', goalRoutes);
 app.use('/api/admin', adminRoutes)
 
-// Health check
 app.get("/", (req, res) => {
   res.send("Server is running ");
 });
@@ -51,5 +46,5 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 2534;
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(` Server running on http://localhost:${PORT}`);
 });
