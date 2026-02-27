@@ -5,7 +5,8 @@ import {
   getAllUsersCon,
   getUserByIdCon,
   updateUserStatusCon,
-  deleteUserCon
+  deleteUserCon,
+  updateUserCon
 } from '../controllers/usersCon.js'
 
 const router = express.Router()
@@ -19,5 +20,5 @@ router.get('/users', getAllUsersCon)             // GET /api/users (list custome
 router.get('/users/:id', getUserByIdCon)         // GET /api/users/:id (get one)
 router.put('/users/:id/status', updateUserStatusCon) // PUT /api/users/:id/status
 router.delete('/users/:id', deleteUserCon)       // DELETE /api/users/:id
-
+router.put('/users/:id', updateUserCon) 
 export default router

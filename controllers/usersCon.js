@@ -5,7 +5,8 @@ import {
   getAllUsersDb,
   getUserByIdDb,
   updateUserStatusDb,
-  deleteUserDb
+  deleteUserDb,
+  updateUserDb
 } from '../models/usersDb.js'
 
 // REGISTER — customers only
@@ -64,5 +65,125 @@ export const loginUserCon = async (req, res) => {
     })
   } catch (err) {
     res.status(500).json({ success: false, message: err.message })
+  }
+}
+
+export const getAllUsersCon = async (req, res) => {
+  try {
+    const users = await getAllUsersDb()
+    res.json(users)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+
+// ===============================
+// GET USER BY ID
+// ===============================
+export const getUserByIdCon = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const user = await getUserByIdDb(id)
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+
+    res.json(user)
+
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+
+// ===============================
+// UPDATE USER STATUS
+// ===============================
+export const updateUserStatusCon = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { status } = req.body
+
+    const updated = await updateUserStatusDb(id, status)
+
+    res.json({
+      message: 'User status updated',
+      updated
+    })
+
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+
+// ===============================
+// DELETE USER
+// ===============================
+export const deleteUserCon = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    await deleteUserDb(id)
+
+    res.json({
+      message: 'User deleted successfully'
+    })
+
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+// ===============================
+// UPDATE USER PROFILE
+// ===============================
+
+
+// ✅ FIXED - UPDATE USER PROFILE
+export const updateUserCon = async (req, res) => {
+  try {
+    const { id } = req.params  // ✅ This should be numeric user_id
+    
+    // ✅ Convert id to number to ensure proper comparison
+    const userId = parseInt(id)
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'Invalid user ID' })
+    }
+    
+    const { name, email, address } = req.body
+
+    // ✅ Check email uniqueness - compare numeric IDs
+    if (email) {
+      const existing = await getUserByEmailDb(email)
+      // ✅ Use == for loose comparison or convert both to numbers
+      if (existing && existing.id != userId) {
+        return res.status(400).json({ error: 'Email already in use' })
+      }
+    }
+
+    const updatedUser = await updateUserDb(userId, {
+      name,
+      email,
+      address
+    })
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: updatedUser
+    })
+
+  } catch (err) {
+    console.error('Update profile error:', err)
+    
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ error: 'Email already exists' })
+    }
+    
+    res.status(500).json({ error: err.message })
   }
 }

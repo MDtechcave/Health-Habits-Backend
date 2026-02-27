@@ -15,7 +15,7 @@ import orderRoutes from "./routes/order.routes.js";
 import subscriptionRoutes from "./routes/subscription.routes.js";
 import goalRoutes from './routes/goal.routes.js';
 import stripeWebhookRoutes from './routes/stripeWebhook.routes.js';
-
+import adminRoutes from './routes/admin.routes.js';
 const app = express();
 
 app.use(cors());
