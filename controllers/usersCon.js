@@ -23,6 +23,7 @@ export const postusersCon = async (req, res) => {
 
     res.json({ message: 'User created!', data })
   } catch (err) {
+    console.error('User registration error:', err)
     if (err.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ error: 'Email already exists' })
     }
