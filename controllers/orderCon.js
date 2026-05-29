@@ -17,12 +17,24 @@ export const postorderCon = async (req,res) => {
         res.status (500).json({ error: err.message});
     }
 };
-//     export const postorderCon = async (req, res) => {
-//     console.log("REQ BODY:", req.body);
-//     res.json({ received: req.body });
+
+// import { Request, Response } from "express";
+
+// export const getDrinks = async (
+//   req: Request,
+//   res: Response
+// ): Promise<void> => {
+//   try {
+
+//     const drinks = ["Coke", "Fanta"];
+
+//     res.json(drinks);
+
+//   } catch (err: any) {
+
+//     res.status(500).json({
+//       error: err.message
+//     });
+
+//   }
 // };
-
-
-// export {
-//     postorderCon
-// }
